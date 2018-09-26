@@ -151,3 +151,4 @@ fun numberRevert(number: Int): Int {
     val z = (number-10*y-100*x)
     return 100*z + 10*y + x
 }
+//Проверяю изменился ли репризеторий 1
