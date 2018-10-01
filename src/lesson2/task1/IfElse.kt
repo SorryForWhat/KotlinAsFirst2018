@@ -148,9 +148,9 @@ fun triangleKind(a: Double, b: Double, c: Double): Int {
     val kl = s * s
     val x = 2 * a * b * c / maxLength
     return when {
-        (kl - x < h) && (a + b + h > 2 * maxLength) -> 2
-        (kl - x == h) && (a + b + h > 2 * maxLength) -> 1
-        (kl - x > h) && (a + b + h > 2 * maxLength) -> 0
+        (kl - x < h) && (a + b + c > 2 * maxLength) -> 2
+        (kl - x == h) && (a + b + c > 2 * maxLength) -> 1
+        (kl - x > h) && (a + b + c > 2 * maxLength) -> 0
         else -> -1
     }
 }
