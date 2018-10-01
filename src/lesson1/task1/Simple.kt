@@ -60,8 +60,8 @@ fun main(args: Array<String>) {
  * Рассчитать время в секундах, прошедшее с начала суток (30035 в данном случае).
  */
 fun seconds(hours: Int, minutes: Int, seconds: Int): Int {
-    val h = hours*3600
-    val m = minutes*60
+    val h = hours * 3600
+    val m = minutes * 60
     return seconds + m + h
 }
 
@@ -75,10 +75,9 @@ fun seconds(hours: Int, minutes: Int, seconds: Int): Int {
  * 1 сажень = 3 аршина = 48 вершков, 1 вершок = 4.445 см.
  */
 fun lengthInMeters(sagenes: Int, arshins: Int, vershoks: Int): Double {
-    val lenghtSagenes = sagenes*48*4.445
-    val lengthArshins = arshins*16*4.445
-    val lengthVershoks = vershoks*4.445
-    return (lenghtSagenes+lengthArshins+lengthVershoks)/100
+    val lenghtSagenes = sagenes * 48
+    val lengthArshins = arshins * 16
+    return (4.445 * (lenghtSagenes + lengthArshins + vershoks)) / 100
 }
 
 /**
@@ -101,7 +100,7 @@ fun angleInRadian(grad: Int, min: Int, sec: Int): Double {
 fun trackLength(x1: Double, y1: Double, x2: Double, y2: Double): Double {
     val x = x2 - x1
     val y = y2 - y1
-    return sqrt(x*x + y*y)
+    return sqrt(x * x + y * y)
 }
 /**
  * Простая
@@ -111,7 +110,7 @@ fun trackLength(x1: Double, y1: Double, x2: Double, y2: Double): Double {
  */
 fun thirdDigit(number: Int): Int {
     val thirdNubmer = number % 1000
-    return thirdNubmer/100
+    return thirdNubmer / 100
 }
 
 /**
@@ -122,8 +121,8 @@ fun thirdDigit(number: Int): Int {
  * Определите время поезда в пути в минутах (в данном случае 216).
  */
 fun travelMinutes(hoursDepart: Int, minutesDepart: Int, hoursArrive: Int, minutesArrive: Int): Int {
-    val timeArrive = hoursArrive*60 + minutesArrive
-    val timeDepart = hoursDepart*60 + minutesDepart
+    val timeArrive = hoursArrive * 60 + minutesArrive
+    val timeDepart = hoursDepart * 60 + minutesDepart
     return timeArrive - timeDepart
 }
 
@@ -135,7 +134,7 @@ fun travelMinutes(hoursDepart: Int, minutesDepart: Int, hoursArrive: Int, minute
  * Например, 100 рублей под 10% годовых превратятся в 133.1 рубля
  */
 fun accountInThreeYears(initial: Int, percent: Int): Double {
-    val z = pow(1+percent*0.01, 3.0)
+    val z = pow(1 + percent * 0.01, 3.0)
     return initial * z
 }
 
@@ -148,7 +147,7 @@ fun accountInThreeYears(initial: Int, percent: Int): Double {
 fun numberRevert(number: Int): Int {
     val x = (number/100)
     val y = (number-x*100)/10
-    val z = (number-10*y-100*x)
+    val z = number % 10
     return 100*z + 10*y + x
 }
 //Проверяю изменился ли репризеторий 1
