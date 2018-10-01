@@ -2,6 +2,8 @@
 package lesson2.task1
 
 import lesson1.task1.discriminant
+import lesson1.task1.sqr
+import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.sqrt
 
@@ -103,8 +105,8 @@ fun whichRookThreatens(kingX: Int, kingY: Int,
                        rookX2: Int, rookY2: Int): Int {
     return when {
         (kingX != rookX1 && kingX != rookX2 && kingY != rookY1 && kingY != rookY2) -> 0
-        ((kingX == rookX1 || kingY == rookY1) && (kingX != rookX2 && kingY != rookY2)) -> 1
-        ((kingX == rookX2 || kingY == rookY2) && (kingX != rookX1 && kingY != rookY1)) -> 2
+        (kingX != rookX2 && kingY != rookY2) -> 1
+        (kingX != rookX1 && kingY != rookY1) -> 2
         else -> 3
     }
 }
@@ -122,12 +124,12 @@ fun whichRookThreatens(kingX: Int, kingY: Int,
 fun rookOrBishopThreatens(kingX: Int, kingY: Int,
                           rookX: Int, rookY: Int,
                           bishopX: Int, bishopY: Int): Int {
-    val kingBishop = (kingY - bishopY) / (kingX - bishopX)
-    val x = Math.abs(kingBishop)
+    val kingBishopY = abs(kingY - bishopY)
+    val kingBishopX = abs(kingX - bishopX)
     return when {
-        x != 1 && (kingX != rookX && kingY != rookY) -> 0
-        x != 1 && (kingX == rookX || kingY == rookY) -> 1
-        x == 1 && (kingX != rookX && kingY != rookY) -> 2
+        kingBishopX != kingBishopY && (kingX != rookX && kingY != rookY) -> 0
+        kingBishopX != kingBishopY -> 1
+        kingBishopX == kingBishopY && (kingX != rookX && kingY != rookY) -> 2
         else -> 3
     }
 }
@@ -141,17 +143,15 @@ fun rookOrBishopThreatens(kingX: Int, kingY: Int,
  * Если такой треугольник не существует, вернуть -1.
  */
 fun triangleKind(a: Double, b: Double, c: Double): Int {
-    val maxAB = Math.max(a, b)
-    val maxLength = Math.max(maxAB, c)
-    val h = maxLength * maxLength
+    val maxLength = maxOf(a, b, c)
+    val h = sqr(maxLength)
     val s = (a + b + c - maxLength)
-    val kl = s * s
-    val x = 2 * a * b * c / maxLength
+    val kl = sqr(s) - 2 * a * b * c / maxLength
     return when {
-        (kl - x < h) && (a + b + c > 2 * maxLength) -> 2
-        (kl - x == h) && (a + b + c > 2 * maxLength) -> 1
-        (kl - x > h) && (a + b + c > 2 * maxLength) -> 0
-        else -> -1
+        a + b < c || a + c < b || b + c < a -> -1
+        kl < h -> 2
+        kl == h -> 1
+        else -> 0
     }
 }
 
@@ -167,7 +167,6 @@ fun segmentLength(a: Int, b: Int, c: Int, d: Int): Int {
     return when {
         (a <= c) && (c <= b) && (b <= d) -> b - c
         (c <= a) && (b <= d) -> b - a
-        (a == d) || (b == c) -> 0
         (a <= c) && (d <= b) -> d - c
         (c <= a) && (a <= d) && (d <= b) -> d - a
         else -> -1
