@@ -3,7 +3,7 @@ package lesson2.task2
 
 import lesson1.task1.sqr
 import lesson4.task1.abs
-import java.lang.Math.pow
+import java.lang.Math.*
 import kotlin.math.abs
 import kotlin.math.sqrt
 
@@ -85,14 +85,12 @@ fun circleInside(x1: Double, y1: Double, r1: Double,
  * Вернуть true, если кирпич пройдёт
  */
 fun brickPasses(a: Int, b: Int, c: Int, r: Int, s: Int): Boolean {
-    val x = a * b
-    val y = b * c
-    val z = a * c
-    val enter = r * s
+    val widht = minOf(a,b,c)
+    val length = a + b + c - maxOf(a,b,c) - widht
+    val holeWidht = min(r, s)
+    val holeLength = max(r, s)
     return when {
-        a < r && b < r && c < r -> false
-        a < s && b < s && c < s -> false
-        x <= enter || y <= enter || z <= enter -> true
+        widht <= holeWidht && length <= holeLength -> true
         else -> false
     }
 }
