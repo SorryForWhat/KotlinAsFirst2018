@@ -54,7 +54,8 @@ fun daysInMonth(month: Int, year: Int): Int {
         month == 1 || month == 3 || month == 5 || month == 7 || month == 8 || month == 10 || month == 12 -> 31
         // не смог найти, как это можно записать короче, только так?
         month == 4 || month == 6 || month == 9 || month == 11 -> 30
-        month == 2 && year % 4 == 0 -> 29
+        (year % 4 == 0) && (year % 100 != 0) -> 29
+        (year % 400 == 0) -> 29
         else -> 28
     }
 }
@@ -89,6 +90,8 @@ fun brickPasses(a: Int, b: Int, c: Int, r: Int, s: Int): Boolean {
     val z = a * c
     val enter = r * s
     return when {
+        a < r && b < r && c < r -> false
+        a < s && b < s && c < s -> false
         x <= enter || y <= enter || z <= enter -> true
         else -> false
     }
