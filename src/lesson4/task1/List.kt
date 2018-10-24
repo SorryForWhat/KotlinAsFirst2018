@@ -199,7 +199,7 @@ fun factorize(n: Int): List<Int> {
     var i = 2
     val result = mutableListOf<Int>()
     var num = n
-    while (i <= num){
+    while (i <= num) {
         if (num % i != 0) i++
         else {
             result.add(i)
@@ -247,11 +247,11 @@ fun convertToString(n: Int, base: Int): String {
     var num = n
     var index = ""
 
-    while (num >= 1) {
+    do {
         val i = num % base
         index += if (i < 10) i.toString() else ('a' + (i - 10))
         num /= base
-    }
+    } while (num > 0)
     return index.reversed()
 }
 //Возможно, здесь можно удобно сократить как в fun factorizeToString, но вряд ли это можно так реализовать
