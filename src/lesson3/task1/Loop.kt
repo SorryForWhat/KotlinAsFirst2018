@@ -134,8 +134,8 @@ fun minDivisor(n: Int): Int {
  * Для заданного числа n > 1 найти максимальный делитель, меньший n
  */
 fun maxDivisor(n: Int): Int {
-    var x = n
-    for (i in n - 1 downTo 1) {
+    var x = 1
+    for (i in n - 1 downTo sqrt(n.toDouble()).toInt()) {
         if (n % i == 0) {
             x = i
             break
@@ -169,7 +169,10 @@ fun isCoPrime(m: Int, n: Int): Boolean {
  */
 fun squareBetweenExists(m: Int, n: Int): Boolean =
         ceil(sqrt(m.toDouble())).toInt() <= floor(sqrt(n.toDouble())).toInt()
-
+/*
+В прошлый раз вы забыли проверить эту задачку и оставили пометку.
+Я полностью переделал задачу, убрав из неё ненужный цикл
+*/
 /**
  * Средняя
  *
