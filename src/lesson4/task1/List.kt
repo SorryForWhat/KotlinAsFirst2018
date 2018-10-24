@@ -248,7 +248,7 @@ fun convertToString(n: Int, base: Int): String {
     var index = ""
 
     while (num >= 1) {
-        var i = num % base
+        val i = num % base
         index += if (i < 10) i.toString() else ('a' + (i - 10))
         num /= base
     }
@@ -286,7 +286,7 @@ fun decimalFromString(str: String, base: Int): Int {
     var num = 0
     var i = 1
     str.reversed().forEach {
-        var index = if (it <= '9') it - '0'
+        val index = if (it <= '9') it - '0'
         else (it.toLowerCase() - 'a' + 10)
         num += index * i
         i *= base
