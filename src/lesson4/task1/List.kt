@@ -4,6 +4,7 @@ package lesson4.task1
 
 import lesson1.task1.discriminant
 import lesson1.task1.sqr
+import sun.text.normalizer.UTF16.append
 import java.io.File.separator
 import kotlin.math.sqrt
 
@@ -149,8 +150,7 @@ fun center(list: MutableList<Double>): MutableList<Double> {
  * представленные в виде списков a и b. Скалярное произведение считать по формуле:
  * C = a1b1 + a2b2 + ... + aNbN. Произведение пустых векторов считать равным 0.0.
  */
-fun times(a: List<Double>, b: List<Double>): Double =
-        a.foldIndexed(0.0) { i, x, _ -> x + a[i] * b[i] }
+fun times(a: List<Double>, b: List<Double>): Double = a.zip(b) { i, x -> i * x }.sum()
 
 /**
  * Средняя
@@ -163,7 +163,7 @@ fun times(a: List<Double>, b: List<Double>): Double =
 fun polynom(p: List<Double>, x: Double): Double {
     var num = 0.0
     var prevX = 1.0
-    p.forEach() {
+    for (it in p) {
         num += it * prevX
         prevX *= x
     }
@@ -199,7 +199,7 @@ fun factorize(n: Int): List<Int> {
     var i = 2
     val result = mutableListOf<Int>()
     var num = n
-    while (i <= num) {
+    while (num != 1) {
         if (num % i != 0) i++
         else {
             result.add(i)
@@ -244,15 +244,15 @@ fun convert(n: Int, base: Int): List<Int> {
  * Например: n = 100, base = 4 -> 1210, n = 250, base = 14 -> 13c
  */
 fun convertToString(n: Int, base: Int): String {
-    var num = n
-    var index = ""
 
-    do {
-        val i = num % base
-        index += if (i < 10) i.toString() else ('a' + (i - 10))
-        num /= base
-    } while (num > 0)
-    return index.reversed()
+    val listToCon = convert(n, base)
+    if (base < 9)
+        return listToCon.joinToString(separator = "")
+    return buildString {
+        for (num in listToCon) {
+            if (num > 9) append((num - 10 + 'a'.toInt()).toChar()) else append(num)
+        }
+    }
 }
 //Возможно, здесь можно удобно сократить как в fun factorizeToString, но вряд ли это можно так реализовать
 
@@ -266,7 +266,7 @@ fun convertToString(n: Int, base: Int): String {
 fun decimal(digits: List<Int>, base: Int): Int {
     var num = 0
     var i = 1
-    digits.reversed().forEach {
+    for (it in digits.reversed()) {
         num += i * it
         i *= base
     }
@@ -283,15 +283,14 @@ fun decimal(digits: List<Int>, base: Int): Int {
  * Например: str = "13c", base = 14 -> 250
  */
 fun decimalFromString(str: String, base: Int): Int {
-    var num = 0
-    var i = 1
-    str.reversed().forEach {
-        val index = if (it <= '9') it - '0'
-        else (it.toLowerCase() - 'a' + 10)
-        num += index * i
-        i *= base
+    val listToDecimal = mutableListOf<Int>()
+    for (it in str) {
+        if (it in 'a'..'z')
+            listToDecimal.add(it - 'a' + 10)
+        else
+            listToDecimal.add(it - '0')
     }
-    return num
+    return decimal(listToDecimal, base)
 }
 
 /**
