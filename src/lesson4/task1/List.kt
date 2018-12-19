@@ -4,8 +4,7 @@ package lesson4.task1
 
 import lesson1.task1.discriminant
 import lesson1.task1.sqr
-import sun.text.normalizer.UTF16.append
-import java.io.File.separator
+import lesson3.task1.minDivisor
 import kotlin.math.sqrt
 
 /**
@@ -196,15 +195,12 @@ fun accumulate(list: MutableList<Double>): MutableList<Double> {
  * Множители в списке должны располагаться по возрастанию.
  */
 fun factorize(n: Int): List<Int> {
-    var i = 2
     val result = mutableListOf<Int>()
     var num = n
-    while (num != 1) {
-        if (num % i != 0) i++
-        else {
-            result.add(i)
-            num /= i
-        }
+    while (num != 1) { //если я правильно понял, то "Перебор можно заканчивать раньше" - сократив кол-во итераций с переменной "I"
+        val i = minDivisor(num)
+        result.add(i)
+        num /= i
     }
     return result
 }
@@ -301,7 +297,21 @@ fun decimalFromString(str: String, base: Int): Int {
  * 90 = XC, 100 = C, 400 = CD, 500 = D, 900 = CM, 1000 = M.
  * Например: 23 = XXIII, 44 = XLIV, 100 = C
  */
-fun roman(n: Int): String = TODO()
+fun roman(n: Int): String {
+    var numVal = n
+    val numberConverted = sortedMapOf(1 to "I", 4 to "IV", 5 to "V", 9 to "IX", 10 to "X", 40 to "XL",
+            50 to "L", 90 to "XC", 100 to "C", 400 to "CD", 500 to "D", 900 to "CM", 1000 to "M")
+    val numToStr = StringBuilder()
+    do {
+        val key = numberConverted.keys.last()
+        if (numVal >= key) {
+            numVal -= key
+            numToStr.append(numberConverted[key])
+        } else numberConverted.remove(key)
+    } while (numVal > 0)
+    return numToStr.toString()
+
+}
 
 
 /**
@@ -311,4 +321,47 @@ fun roman(n: Int): String = TODO()
  * Например, 375 = "триста семьдесят пять",
  * 23964 = "двадцать три тысячи девятьсот шестьдесят четыре"
  */
-fun russian(n: Int): String = TODO()
+
+fun digitToStr(n: Int): String {
+    var numberStr = ""
+    val listDozens = listOf("", "десять", "двадцать", "тридцать", "сорок",
+            "пятьдесят", "шестьдесят", "семьдесят", "восемьдесят", "девяносто",
+            "один", "две", "три", "четыр", "пят", "шест", "сем", "восем", "девят", "надцать")
+    val listHundreds = listOf("сто", "двести", "триста", "четыреста",
+            "пятьсот", "шестьсот", "семьсот", "восемьсот", "девятьсот")
+    val listUnit = listOf("", "один", "два", "три", "четыре",
+            "пять", "шесть", "семь", "восемь", "девять")
+    val num1 = n / 100
+    val num2 = n % 100
+    if (num1 > 0) numberStr += listHundreds[num1 - 1] + " "
+    numberStr += when (num2) {
+        in 1..9 -> listUnit[num2 % 10] + " "
+        in 11..19 -> listDozens[num2 % 10 + 9] + listDozens[19] + " "
+        else -> listDozens[num2 / 10] + " " + listUnit[num2 % 10] + " "
+    }
+    return numberStr.trim()
+}
+fun russian(n: Int): String {
+    var numberStr = ""
+    val listThousand = listOf("тысяча", "тысячи", "тысяч")
+    numberStr += digitToStr(n / 1000)
+    if (n / 1000 > 0) {
+        if ((n / 1000) % 10 > 0) {
+            numberStr = when (numberStr.last()) {
+                'н' -> numberStr.substring(0, numberStr.length - 2) + "на"
+                'а' -> numberStr.substring(0, numberStr.length - 1) + "е"
+                else -> numberStr
+            }
+        }
+        val temp1 = when {
+            numberStr.last() == 'ь' || (n / 1000) % 10 == 0 -> listThousand[2]
+            numberStr.last() == 'а' -> listThousand[0]
+            else -> listThousand[1]
+        }
+        numberStr += " $temp1"
+    }
+    if (n % 1000 != 0) {
+        numberStr += " " + digitToStr(n % 1000)
+    }
+    return numberStr.trim()
+}
