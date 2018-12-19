@@ -197,7 +197,7 @@ fun accumulate(list: MutableList<Double>): MutableList<Double> {
 fun factorize(n: Int): List<Int> {
     val result = mutableListOf<Int>()
     var num = n
-    while (num != 1) { //если я правильно понял,  то "Перебор можно заканчивать раньше" - сократив кол-во итераций с переменной "I"
+    while (num != 1) { //если я правильно понял,то "Перебор можно заканчивать раньше" - сократив кол-во итераций с переменной "I"
         val i = minDivisor(num)
         result.add(i)
         num /= i
