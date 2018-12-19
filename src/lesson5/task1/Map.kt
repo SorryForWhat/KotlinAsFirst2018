@@ -2,6 +2,8 @@
 
 package lesson5.task1
 
+import lesson2.task2.pointInsideCircle
+
 /**
  * Пример
  *
@@ -95,7 +97,8 @@ fun buildWordSet(text: List<String>): MutableSet<String> {
  *   ) -> mapOf("Emergency" to "112, 911", "Police" to "02")
  */
 fun mergePhoneBooks(mapA: Map<String, String>, mapB: Map<String, String>): Map<String, String> =
-        (mapA.entries + mapB.entries).groupBy {it.key}.mapValues { (_, x) -> x.joinToString(", ") {it.value}
+        (mapA.entries + mapB.entries).groupBy { it.key }.mapValues { (_, x) ->
+            x.joinToString(", ") { it.value }
         }
 
 /**
@@ -112,12 +115,8 @@ fun buildGrades(grades: Map<String, Int>): Map<Int, List<String>> =
         grades.entries
                 .map { it.key }
                 .groupBy { grades[it]!! }
-                .mapValues { (_, x) -> x.sortedDescending() } // Я представляю как не отбрасывать резултат grades,
-                //просто по-моему это не только заняло-бы больше места, но и нарушило бы эстетику одной команды (по времени всё равно же оптимизировано)
-//        var temp = res[grade]
-//        if (temp == null) temp = mutableListOf(name)
-//        else temp.add(name)
-//        res[grade] = temp
+                .mapValues { (_, x) -> x.sortedDescending() }
+// Можно привести пример решения без .map и с Sequence. Понял свою ошибку, но не получается написать по другому без ошибок
 
 /**
  * Простая
@@ -130,7 +129,7 @@ fun buildGrades(grades: Map<String, Int>): Map<Int, List<String>> =
  *   containsIn(mapOf("a" to "z"), mapOf("a" to "zee", "b" to "sweet")) -> false
  */
 fun containsIn(a: Map<String, String>, b: Map<String, String>): Boolean =
-        a.all { (i, num) -> b[i] == num }
+        a.all { (i, key) -> b[i] == key }
 
 /**
  * Средняя
@@ -144,7 +143,7 @@ fun containsIn(a: Map<String, String>, b: Map<String, String>): Boolean =
  */
 fun averageStockPrice(stockPrices: List<Pair<String, Double>>): Map<String, Double> {
     val averageList = mutableMapOf<String, Double>()
-    val prices = stockPrices.groupBy({it.first}, {it.second})
+    val prices = stockPrices.groupBy({ it.first }, { it.second })
     for (key in prices.keys) {
         var count = 0
         for (price in prices[key]!!) {
@@ -240,10 +239,8 @@ fun whoAreInBoth(a: List<String>, b: List<String>): List<String> =
  *   canBuildFrom(listOf('a', 'b', 'o'), "baobab") -> true
  */
 fun canBuildFrom(chars: List<Char>, word: String): Boolean {
-    val charsMap = chars.toSet().map {
-        it.toLowerCase() }.toSet()
-    val wordsMap = word.toSet().map {
-        it.toLowerCase() }.toSet()
+    val charsMap = chars.toSet().map { it.toLowerCase() }.toSet()
+    val wordsMap = word.toSet().map { it.toLowerCase() }.toSet()
     return charsMap.containsAll(wordsMap)
 }
 
@@ -305,7 +302,6 @@ fun hasAnagrams(words: List<String>): Boolean {
  *   findSumOfTwo(listOf(1, 2, 3), 6) -> Pair(-1, -1)
  */
 fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> {
-    if (list.isEmpty()) return Pair(-1, -1)
     val mapOfList = mutableMapOf<Int, Int>()
     for (i in 0 until list.size) {
         if (mapOfList[number - list[i]] != null)
