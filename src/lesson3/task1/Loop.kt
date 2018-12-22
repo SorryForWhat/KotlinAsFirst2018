@@ -127,14 +127,11 @@ fun minDivisor(n: Int): Int {
  * Для заданного числа n > 1 найти максимальный делитель, меньший n
  */
 fun maxDivisor(n: Int): Int {
-    var x = 1
-    for (i in n / 2 downTo sqrt(n.toDouble()).toInt()) {
-        if (n % i == 0) {
-            x = i
-            break
-        }
+    if (isPrime(n)) return 1
+    for (i in n / 2 downTo 2) {
+        if (n % i == 0) return i
     }
-    return x
+    return 1
 }
 
 /**
@@ -314,15 +311,13 @@ fun squareSequenceDigit(n: Int): Int {
  * Использовать операции со строками в этой задаче запрещается.
  */
 fun fibSequenceDigit(n: Int): Int {
-    var x = 0
-    var num = 0
+    var x = 1
+    var num = 1
+    var res = 1
     while (num < n) {
         x++
+        res = fib(x)
         num += digitNumber(fib(x))
     }
-    var res = fib(x)
-    for (i in n until num) {
-        res /= 10
-    }
-    return (res % 10)
+    return res / pow(10.0, num.toDouble() - n).toInt() % 10
 }
