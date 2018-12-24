@@ -238,7 +238,7 @@ fun top20Words(inputName: String): Map<String, Int> {
  */
 fun transliterate(inputName: String, dictionary: Map<Char, String>, outputName: String) {
     val writer = File(outputName).writer()
-    val dictionaryToLow = dictionary.map {it.key.toLowerCase() to it.value.toLowerCase()}.toMap()
+    val dictionaryToLow = dictionary.map { it.key.toLowerCase() to it.value.toLowerCase() }.toMap()
     val outputStream = File(inputName).readText()
     for (i in outputStream) {
         val text = StringBuilder(dictionaryToLow[i.toLowerCase()] ?: i.toString())
@@ -275,11 +275,10 @@ fun transliterate(inputName: String, dictionary: Map<Char, String>, outputName: 
 fun chooseLongestChaoticWord(inputName: String, outputName: String) {
     val mutableList = mutableListOf<String>()
     val writer = File(outputName).bufferedWriter()
-    for (i in File(inputName).readLines()) {
+    for (i in File(inputName).readLines())
         if (i.toLowerCase().toSet().count() == i.count()) mutableList.add(i)
-    }
     val maxLength = mutableList.maxBy { it.count() }!!.count()
-    writer.write(mutableList.filter { it.count() == maxLength }.joinToString(separator = ", "))
+    File(outputName).writeText(mutableList.filter { it.count() == maxLength }.joinToString())
     writer.close()
 }
 
