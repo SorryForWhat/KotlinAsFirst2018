@@ -240,7 +240,6 @@ fun mostExpensive(description: String): String {
 fun fromRoman(roman: String): Int {
     val romanToNum = mapOf( "M" to 1000, "CM" to 900, "D" to 500, "CD" to 400, "C" to 100, "XC" to 90,
             "L" to 50, "XL" to 40, "X" to 10, "IX" to 9, "V" to 5, "IV" to 4, "I" to 1)
-    val res = -1
     return when {
         Regex("""M*(?:CM|DC{0,3}|CD|C{0,3})?(?:XC|LX{0,3}|XL|X{0,3})?(?:IX|VI{0,3}|IV|I{0,3})?""")
                 .matches(roman) ->
@@ -248,7 +247,7 @@ fun fromRoman(roman: String): Int {
                     .findAll(roman)
                     .map { romanToNum[it.value] }
                     .sumBy { it ?: 0 }
-        else -> res
+        else -> -1
     }
 }
 
