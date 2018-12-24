@@ -2,7 +2,7 @@
 
 package lesson5.task1
 
-import lesson2.task2.pointInsideCircle
+import sun.invoke.empty.Empty
 
 /**
  * Пример
@@ -111,13 +111,14 @@ fun mergePhoneBooks(mapA: Map<String, String>, mapB: Map<String, String>): Map<S
  *   buildGrades(mapOf("Марат" to 3, "Семён" to 5, "Михаил" to 5))
  *     -> mapOf(5 to listOf("Семён", "Михаил"), 3 to listOf("Марат"))
  */
-fun buildGrades(grades: Map<String, Int>): Map<Int, List<String>> =
-        grades.entries
-                .map { it.key }
-                .groupBy { grades[it]!! }
-                .mapValues { (_, x) -> x.sortedDescending() }
-// Можно привести пример решения без .map и с Sequence. Понял свою ошибку, но не получается написать по другому без ошибок
-
+fun buildGrades(grades: Map<String, Int>): Map<Int, List<String>> {
+    val mutableResultMap = mutableMapOf<Int, List<String>>()
+    val mutableMap = mutableMapOf<Int, MutableList<String>>()
+    grades.forEach { mutableMap.getOrPut(it.value, ::mutableListOf).add(it.key) }
+    for ((key, value) in mutableMap)
+        mutableResultMap[key] = value.toList().sortedDescending()
+    return mutableResultMap
+}
 /**
  * Простая
  *
@@ -142,17 +143,31 @@ fun containsIn(a: Map<String, String>, b: Map<String, String>): Boolean =
  *     -> mapOf("MSFT" to 150.0, "NFLX" to 40.0)
  */
 fun averageStockPrice(stockPrices: List<Pair<String, Double>>): Map<String, Double> {
+    if (stockPrices.isEmpty()) return mapOf()
+    if (stockPrices.size == 1) stockPrices.toMap()
     val averageList = mutableMapOf<String, Double>()
-    val prices = stockPrices.groupBy({ it.first }, { it.second })
-    for (key in prices.keys) {
-        var count = 0
-        for (price in prices[key]!!) {
-            count++
+    val prices = stockPrices.sortedBy { it.first }
+    val sortedPricesList = mutableListOf(prices[0].second)
+
+    for (i in 1 until prices.size) {
+        val current = prices[i - 1].first
+        val next = prices[i].first
+        if (next != current) {
+            averageList[current] = sortedPricesList.average()
+            sortedPricesList.clear()
         }
-        averageList[key] = prices[key]!!.fold(0.0) { num, it -> num + (it / count) }
+        sortedPricesList += prices[i].second
     }
+    averageList[prices.last().first] = sortedPricesList.average()
     return averageList
 }
+
+    //   stockPrices.groupBy { it.first } //пытался по комментарию на 153
+//            .mapValues {
+//                val res = it.value.size
+//                it.value.map { res.average() }
+//            }
+
 
 /**
  * Средняя
@@ -173,7 +188,7 @@ fun findCheapestStuff(stuff: Map<String, Pair<String, Double>>, kind: String): S
         stuff
                 .filter { (_, stuff) -> stuff.first == kind }
                 .minBy { (_, stuff) -> stuff.second }
-                ?.component1()
+                ?.key
 
 /**
  * Сложная
@@ -227,7 +242,7 @@ fun subtractOf(a: MutableMap<String, String>, b: Map<String, String>): Unit {
  * Для двух списков людей найти людей, встречающихся в обоих списках
  */
 fun whoAreInBoth(a: List<String>, b: List<String>): List<String> =
-        (a.toMutableSet().intersect(b.toMutableSet())).toList()
+        (a.toMutableSet().intersect(b)).toList()
 
 /**
  * Средняя
@@ -302,11 +317,10 @@ fun hasAnagrams(words: List<String>): Boolean {
  *   findSumOfTwo(listOf(1, 2, 3), 6) -> Pair(-1, -1)
  */
 fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> {
-    val mapOfList = mutableMapOf<Int, Int>()
-    for (i in 0 until list.size) {
-        if (mapOfList[number - list[i]] != null)
-            return Pair((mapOfList[number - list[i]] ?: 0), i)
-        mapOfList[list[i]] = i
+    val mutableList = list.toMutableList()
+    for (element in mutableList) {
+        val tempList = mutableList - element
+        if (number - element in tempList) return list.indexOf(element) to tempList.indexOf(number - element) + 1
     }
     return Pair(-1, -1)
 }
