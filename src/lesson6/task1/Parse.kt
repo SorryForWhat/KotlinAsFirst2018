@@ -3,6 +3,15 @@
 package lesson6.task1
 
 import lesson2.task2.daysInMonth
+//К сожалению перепутал дни дедлайна (18 с 19 числом), и не смог загрузить все 2 оставшихся лессона 19 числа.
+//Сейчас они лежат в репозитории без проверки и дополнят нужные баллы к зачёту (+0.2 и уберут штраф)
+//Жутко не хотелось бы пропускать написание экзамена из-за такой ошибки.
+//Извините за задержку и беспокойство!
+//Комментарий лектора Mikhail Glukhikh
+//glukhikh@mail.ru
+//сегодня в 14:36
+//
+//Котоед разморожен, так что загружайте и общайтесь с проверяющим преподавателем. Если он разрешит -- я не против.
 /**
  * Пример
  *
@@ -164,11 +173,13 @@ fun bestHighJump(jumps: String): Int {
 fun plusMinus(expression: String): Int {
     var plus = 0
     var minus = 0
+    var result = 0
     if (Regex("""((([1-9]+\d+)|\d)\s(\+|\-)\s)*(([1-9]+\d+)|\d)""").matches(expression)) {
         Regex("""\d+""").findAll(expression).forEach { plus += it.value.toInt() }
         Regex("""\-\s\d+""").findAll(expression).forEach { minus += Regex("""\d+""").find(it.value)!!.value.toInt() }
+        result = plus - 2 * minus
     } else throw IllegalArgumentException()
-    return plus - 2 * minus
+    return result
 }
 /**
  * Сложная
