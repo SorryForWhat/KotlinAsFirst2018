@@ -237,16 +237,20 @@ fun top20Words(inputName: String): Map<String, Int> {
  * Обратите внимание: данная функция не имеет возвращаемого значения
  */
 fun transliterate(inputName: String, dictionary: Map<Char, String>, outputName: String) {
-    val writer = File(outputName).writer()
-    val dictionaryToLow = dictionary.map { it.key.toLowerCase() to it.value.toLowerCase() }.toMap()
-    val outputStream = File(inputName).readText()
-    for (i in outputStream) {
-        val text = StringBuilder(dictionaryToLow[i.toLowerCase()] ?: i.toString())
-        if (i.isUpperCase()) text[0] = text[0].toUpperCase()
-        writer.write(text.toString())
-    }
-    writer.close()
+    TODO()
 }
+
+//{
+//    val writer = File(outputName).writer()
+//    val dictionaryToLow = dictionary.map { it.key.toLowerCase() to it.value.toLowerCase() }.toMap()
+//   val outputStream = File(inputName).readText()
+//    for (i in outputStream) {
+//        val text = StringBuilder(dictionaryToLow[i.toLowerCase()] ?: i.toString())
+//        if (i.isUpperCase()) text[0] = text[0].toUpperCase()
+//        writer.write(text.toString())
+//    }
+//   writer.close()
+//}
 
 /**
  * Средняя
@@ -273,6 +277,7 @@ fun transliterate(inputName: String, dictionary: Map<Char, String>, outputName: 
  * Обратите внимание: данная функция не имеет возвращаемого значения
  */
 fun chooseLongestChaoticWord(inputName: String, outputName: String) {
+    if (inputName.isBlank()) File(outputName).writeText("")
     val mutableList = mutableListOf<String>()
     val writer = File(outputName).bufferedWriter()
     for (i in File(inputName).readLines())
