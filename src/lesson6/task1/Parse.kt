@@ -85,7 +85,7 @@ fun dateStrToDigit(str: String): String {
     val month = listOf("января", "февраля", "марта", "апреля", "мая", "июня", "июля", "августа", "сентября",
             "октября", "ноября", "декабря")
     val date = str.split(" ")
-    if (date.size !=3) return ""
+    if (date.size != 3) return ""
     if (date[1] !in month) return ""
     if (daysInMonth(month.indexOf(date[1]) + 1, date[2].toInt()) < date[0].toInt()) return ""
     return String.format("%02d.%02d.%01d", date[0].toInt(), month.indexOf(date[1]) + 1, date[2].toInt())
@@ -101,8 +101,16 @@ fun dateStrToDigit(str: String): String {
  * Обратите внимание: некорректная с точки зрения календаря дата (например, 30 февраля 2009) считается неверными
  * входными данными.
  */
-fun dateDigitToStr(digital: String): String = TODO()
-
+fun dateDigitToStr(digital: String): String {
+    val month = listOf("января", "февраля", "марта", "апреля", "мая", "июня", "июля", "августа", "сентября",
+            "октября", "ноября", "декабря")
+    val date = digital.split(".")
+    if (!digital.matches(Regex("""^\d{1,2}\.\d{2}\.\d+$"""))) return ""
+    if (date.size != 3) return ""
+    if (date[1].toInt() == 0 || date[1].toInt() > 12) return ""
+    if (daysInMonth(month.indexOf(date[1]) + 1, date[2].toInt()) < date[0].toInt()) return ""
+    return String.format("%d %s %d", date[0].toInt(), month[date[1].toInt() - 1], date[2].toInt())
+}
 
 /**
  * Средняя
@@ -238,10 +246,11 @@ fun mostExpensive(description: String): String {
  * Вернуть -1, если roman не является корректным римским числом
  */
 fun fromRoman(roman: String): Int {
-    val romanToNum = mapOf( "M" to 1000, "CM" to 900, "D" to 500, "CD" to 400, "C" to 100, "XC" to 90,
+    val romanToNum = mapOf("M" to 1000, "CM" to 900, "D" to 500, "CD" to 400, "C" to 100, "XC" to 90,
             "L" to 50, "XL" to 40, "X" to 10, "IX" to 9, "V" to 5, "IV" to 4, "I" to 1)
+    if (roman == "") return -1
     return when {
-        Regex("""M*(?:CM|DC{0,3}|CD|C{0,3})?(?:XC|LX{0,3}|XL|X{0,3})?(?:IX|VI{0,3}|IV|I{0,3})?""")
+        Regex("""M*(?:CM|DC{0,3}|CD|C{0,3})+(?:XC|LX{0,3}|XL|X{0,3})?(?:IX|VI{0,3}|IV|I{0,3})?""")
                 .matches(roman) ->
             Regex("""CM|CD|XC|XL|IX|IV|M|D|C|L|X|V|I""")
                     .findAll(roman)
