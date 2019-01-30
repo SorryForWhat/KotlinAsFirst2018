@@ -129,12 +129,13 @@ fun centerFile(inputName: String, outputName: String) {
         else Regex("""(?<!.)\s+|\s+(?!.)""").replace(it, "")
     }.toMutableList()
     val length = mutableList.map { it.length }
-    val maxLength = length.max()!!
-    for (i in 0 until mutableList.size) {
-        for (c in 1..(maxLength - length[i]) / 2) mutableList[i] = " " + mutableList[i]
-    }
+    if (mutableList.isNotEmpty()) {
+        val maxLength = length.max()!!
+        for (i in 0 until mutableList.size) {
+            for (it in 1..(maxLength - length[i]) / 2) mutableList[i] = " " + mutableList[i]
+        }
+    } else File(outputName).writeText("")
     File(outputName).writeText(mutableList.joinToString("\n"))
-
 }
 
 /**
@@ -165,8 +166,29 @@ fun centerFile(inputName: String, outputName: String) {
  * 8) Если входной файл удовлетворяет требованиям 1-7, то он должен быть в точности идентичен выходному файлу
  */
 fun alignFileByWidth(inputName: String, outputName: String) {
-    TODO()
+    var wordList: List<String>
+    val mutableList = mutableListOf<String>()
+    val writer = File(outputName).bufferedWriter()
+    writer.append("")
+    for (lines in File(inputName).readLines())
+        mutableList.add(lines.trim().replace(Regex("""\s+"""), " "))
+    val maxLength: Int = mutableList.map { it.length }.max() ?: 0
+    for (lines in mutableList) {
+        wordList = lines.split(" ")
+        if (wordList.size >= 2 || lines.length == maxLength) {
+            var s = ""
+            for (i in 0..(maxLength - lines.length) / (wordList.size - 1))
+                s += " "
+
+            val spaceAdd = (maxLength - lines.length) % (wordList.size - 1)
+            for (i in 0 until wordList.size - 1)
+                writer.append(wordList[i] + s + if (i < spaceAdd) " " else "")
+            writer.appendln(wordList.last())
+        } else writer.appendln(lines)
+    }
+    writer.close()
 }
+
 
 /**
  * Средняя
@@ -277,7 +299,6 @@ fun transliterate(inputName: String, dictionary: Map<Char, String>, outputName: 
  * Обратите внимание: данная функция не имеет возвращаемого значения
  */
 fun chooseLongestChaoticWord(inputName: String, outputName: String) {
-    if (inputName.isBlank()) File(outputName).writeText("")
     val mutableList = mutableListOf<String>()
     val writer = File(outputName).bufferedWriter()
     for (i in File(inputName).readLines())
