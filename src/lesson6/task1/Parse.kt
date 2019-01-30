@@ -105,10 +105,10 @@ fun dateDigitToStr(digital: String): String {
     val month = listOf("января", "февраля", "марта", "апреля", "мая", "июня", "июля", "августа", "сентября",
             "октября", "ноября", "декабря")
     val date = digital.split(".")
-    if (!digital.matches(Regex("""^\d{1,2}\.\d{2}\.\d+$"""))) return ""
+    if (!digital.matches(Regex("""^\d{1,2}\.\d{1,2}\.\d+$"""))) return ""
     if (date.size != 3) return ""
     if (date[1].toInt() == 0 || date[1].toInt() > 12) return ""
-    if (daysInMonth(month.indexOf(date[1]) + 1, date[2].toInt()) < date[0].toInt()) return ""
+    if (daysInMonth(date[1].toInt(), date[2].toInt()) < date[0].toInt()) return ""
     return String.format("%d %s %d", date[0].toInt(), month[date[1].toInt() - 1], date[2].toInt())
 }
 
