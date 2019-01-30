@@ -106,7 +106,7 @@ data class Segment(val begin: Point, val end: Point) {
  * Если в множестве менее двух точек, бросить IllegalArgumentException
  */
 fun diameter(vararg points: Point): Segment = points.flatMap { from -> points.map { to -> Segment(from, to) } }
-        .sortedBy { it.begin.distance(it.end) }[0]
+        .sortedBy { -it.begin.distance(it.end) }[0]
 /**
  * Простая
  *
@@ -136,8 +136,8 @@ class Line private constructor(val b: Double, val angle: Double) {
      * Для этого необходимо составить и решить систему из двух уравнений (каждое для своей прямой)
      */
     fun crossPoint(other: Line): Point {
-        val pointX = other.b * cos(angle) - b * cos(other.angle) / sin(angle - other.angle)
-        val pointY = other.b * sin(angle) - b * sin(other.angle) / sin(angle - other.angle)
+        val pointX = (other.b * cos(angle) - b * cos(other.angle)) / sin(angle - other.angle)
+        val pointY = (other.b * sin(angle) - b * sin(other.angle)) / sin(angle - other.angle)
         return Point(pointX, pointY)
     }
 
@@ -164,15 +164,21 @@ fun lineBySegment(s: Segment): Line = lineByPoints(s.begin, s.end)
  *
  * Построить прямую по двум точкам
  */
-fun lineByPoints(a: Point, b: Point): Line = lineBySegment(Segment(a, b))
-
+fun lineByPoints(a: Point, b: Point): Line {
+    val angle = atan2(b.y - a.y, b.x - a.x) % PI
+    return Line(a, if (angle < 0) (PI + angle) % PI else angle)
+}
 
 /**
  * Сложная
  *
  * Построить серединный перпендикуляр по отрезку или по двум точкам
  */
-fun bisectorByPoints(a: Point, b: Point): Line = TODO()
+fun bisectorByPoints(a: Point, b: Point): Line {
+    val c = Point((a.x + b.x) / 2, (a.y + b.y) / 2)
+    val angle = (lineByPoints(a, b).angle + PI / 2) % 2
+    return Line(c, if (angle < 0) (PI + angle) % PI else angle)
+}
 
 /**
  * Средняя
