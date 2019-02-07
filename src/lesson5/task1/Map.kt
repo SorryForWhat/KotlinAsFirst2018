@@ -2,6 +2,7 @@
 
 package lesson5.task1
 
+import lesson3.task1.digitCountInNumber
 import sun.invoke.empty.Empty
 
 /**
@@ -214,7 +215,23 @@ fun findCheapestStuff(stuff: Map<String, Pair<String, Double>>, kind: String): S
  *          "Mikhail" to setOf("Sveta", "Marat")
  *        )
  */
-fun propagateHandshakes(friends: Map<String, Set<String>>): Map<String, Set<String>> = TODO()
+fun propagateHandshakes(friends: Map<String, Set<String>>): Map<String, Set<String>> {
+    var map1 = mutableMapOf<String, MutableSet<String>>()
+    for ((key) in friends) map1[key] = friends[key]!!.toMutableSet()
+    var map2: MutableMap<String, MutableSet<String>>
+    map2 = map1.toMutableMap()
+    do {
+        map2 = map1.toMutableMap()
+        for ((name, connections) in map2) {
+            for (i in connections) {
+                if (!map2.contains(i)) map1[i] = mutableSetOf()
+                else map1[name] = map1[name]!!.union(map2[i]!!).toMutableSet()
+            }
+        }
+    } while (map1 != map2)
+    map2.map { s -> s.value.removeIf { it.contains(s.key) } }
+    return map2
+}
 
 /**
  * Простая
@@ -345,3 +362,4 @@ fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> {
  *   ) -> emptySet()
  */
 fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<String> = TODO()
+
