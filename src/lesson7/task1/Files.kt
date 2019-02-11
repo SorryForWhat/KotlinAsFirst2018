@@ -172,23 +172,24 @@ fun alignFileByWidth(inputName: String, outputName: String) {
     writer.append("")
     for (lines in File(inputName).readLines())
         mutableList.add(lines.trim().replace(Regex("""\s+"""), " "))
-    val maxLength: Int = mutableList.map { it.length }.max() ?: 0
-    for (lines in mutableList) {
-        wordList = lines.split(" ")
-        if (wordList.size >= 2 || lines.length == maxLength) {
-            var s = ""
-            for (i in 0..(maxLength - lines.length) / (wordList.size - 1))
-                s += " "
-
-            val spaceAdd = (maxLength - lines.length) % (wordList.size - 1)
-            for (i in 0 until wordList.size - 1)
-                writer.append(wordList[i] + s + if (i < spaceAdd) " " else "")
-            writer.appendln(wordList.last())
-        } else writer.appendln(lines)
+    if (mutableList.isNotEmpty()) {
+        val maxLength: Int = mutableList.map { it.length }.max() ?: 0
+        for (lines in mutableList) {
+            wordList = lines.split(" ")
+            if (wordList.size >= 2 || lines.length == maxLength) {
+                var s = ""
+                val lineFromLeft = maxLength - lines.length
+                val wordLength = wordList.size - 1
+                for (i in 0..lineFromLeft / wordLength) s += " "
+                val spaceAdd = lineFromLeft % wordLength
+                for (i in 0 until wordList.size - 1)
+                    writer.append(wordList[i] + s + if (i < spaceAdd) " " else "")
+                writer.appendln(wordList.last())
+            } else writer.appendln(lines)
+        }
+        writer.close()
     }
-    writer.close()
 }
-
 
 /**
  * Средняя
